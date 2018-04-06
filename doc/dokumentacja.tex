@@ -11,6 +11,7 @@
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{indentfirst}
+\usepackage{amsthm}
 \linespread{1.5}
 
 \renewcommand{\refname}{Źródła}
@@ -171,6 +172,65 @@ Funkcja przyjmuje zbiór wierzchołków $S$ o etykietach od $1$ do $|S|$ i macie
 
 \section{Dowód poprawności}
 
+Poprawność algorytmu opiera się na poprawności kodowania Prüfera i twierdzeniu, że algorytm wyznacza unikalny kod Prüfera dla danej macierzy wejściowej.
+
+\newtheorem{lem}{Twierdzenie}
+
+\begin{lem}
+	Powyższy algorytm wyznacza unikalny kod Prüfera dla macierzy odległości $D_{ij}$.
+\end{lem}
+
+\begin{proof}
+Niech $T = (V, E)$ będzie drzewem o $n$ wierzchołkach.
+Niech $A$ będzie macierzą sąsiedztwa drzewa $T$, zdefiniowaną jako
+\[
+  A_{ij} = \left.
+  \begin{cases}
+    1, & \text{dla } (i, j) \in E \\
+    0, & \text{dla } (i, j) \notin E
+  \end{cases}
+  \right.
+\]
+
+Niech R = {1, 2, 3, \dots, r}, będzie początkowym zbiorem liści. Oznaczmy zbiór wierzchołków wewnętrznych jako $K = \{m, m+1, m+2, \dots, m+k-1\}$, $m=r+1$ $|R| = r$ i $|K|=k$, $r \geq 2$, $k \geq 1$. Liczba wierzchołków drzewa $T$, wynosi $n = r + k$.
+Przyjmijmy, że $P$ i $Q$ są dwoma różnymi kodami Prüfera o długości $n-2$ uzyskanymi przez zastosowanie algorytmu dla macierzy $D_{ij}$.
+$P$ i $Q$ zawierają etykiety z K (liście nie występują w ciągu) i każdy wierzchołek z $K$ pojawia się w ciągu co najmniej raz.
+
+Kody $P$ i $Q$ muszą się różnić na co najmniej jednej pozycji i dla dowolnej pary wierchołków istnieje unikalna ścieżka między nimi. Wystarczy więc pokazać, że jakakolwiek zmiana ciągu powoduje modyfikację macierzy sąsiedztwa i w rezultacie modyfikuje macierz odległości.
+
+Niech $last_{1, \dots, n-2}$ będzie tablicą oznaczającą skrajnie prawe (ostatnie) wystąpienie etykiety w kodzie. Wartość $last_i = 1$, gdy $i$ jest skrajnie prawym indeksem w kodzie dla wierzchołka $P_i$ i 0 w przeciwnym przypadku.
+
+Niech $R'$ będzie nowym zbiorem liści, po wyrzuceniu liści z poprzedniej iteracji. Zbiór ten tworzymy, poprzez dodanie $P_i$ do $R'$, gdy $last_i = 1$ dla poprzedniego ciągu.
+
+Początkowo macierz sąsiedztwa $A{n \times n}$ jest wypełniona zerami. Element $A_{ij}$ przyjmuje wartość 1 w następujących przypadkach:
+
+Gdy $i \in R$:
+  Pierwsze r wierzchołków kodu Prüfera są incydentne z liśćmi z $R$.
+  $A_{i, P_i} = 1, \text{dla } i = 1, 2, \dots, r$
+
+Gdy $i \in K$:
+  Rozważmy nowy zbiór liści $R'$ taki, że $2 \leq |R'| \leq |R|$ 
+  $A_{ij} = 1$, gdy $ i \in R' $ i $j = P_t $, gdzie $P_t$ jest sąsiadem $i$ i $t$ oznacza indeks etykiety w kodzie Prüfera pomiędzy
+   $|R| + 1$, a $|R| + |R'|$, tzn. $|R| < t \leq |R| + |R'|$.
+
+Zbiór $R'$ jest wyznaczany w każdej iteracji algorytmu i powiększa zbiór $R$. Iteracje powtarzamy dopóki $R' \neq \O$.
+
+Kody $P$ i $Q$ mogą różnić się w następujących przypadkach:
+
+Przypadek I
+
+Kody $P$ i $Q$ różnią się na pierwszych $r$ pozycjach. W takiej sytuacji liście będą miały inne sąsiedztwo i różne też będą macierze sąsiedztwa dla $P$ i $Q$.
+
+Przypadek II
+
+Kody $P$ i $Q$ różnią się na pozostałych k pozycjach. Wtedy zbiór $R'$ będzie różny dla obu kodów w co najmniej jednej iteracji i różne też będą wierzchołki sąsiadujące.
+
+W obu przypadkach zmiana dowolnej wartości w kodzie skutkuje zmianą macierzy sąsiedztwa i w strukturze drzewa.
+
+Zatem $P$ i $Q$ muszą być identyczne jeśli kodują drzewa o identycznych macierzach sąsiedztwa, co kończy dowód.
+\end{proof}
+
+
 \section{Złożoność obliczeniowa}
 
 Załóżmy, że rozwiązujemy problem wielkości $n$, gdzie $n$ to liczba wierzchołków wejściowego zbioru liści. Na złożoność obliczeniową największy wpływ ma funkcja \texttt{getleaves} o złożoności $\mathcal{O}(n^3)$ - zawiera ona potrójną pętlę po wszystkich wierzchołkach zbioru tymczasowego, którego pesymistyczna wielkość wynosi $n$. Dodawanie wierzchołka do tymczasowego zbioru $S$ ma pesymistyczną złożoność $\mathcal{O}(n)$ - musimy przejrzeć pełną listę wierzchołków. Reszta operacji wykonywana jest w czasie stałym.
@@ -181,8 +241,8 @@ Aby obliczyć pesymistyczną złożoność należy oszacować liczbę wykonań g
 
 \newpage
 
-\begin{thebibliography}{}
-
+\begin{thebibliography}{1}
+\bibitem{TreeInference} C. Vanniarajan, Kamala Krithivasan, Network (Tree) Topology Inference Based on Prüfer Sequence, http://www.cse.iitm.ac.in/\~kamala/NCC2010\_Topology\_Inference\_V1\_1.pdf
 \end{thebibliography}
 
 \end{document}
