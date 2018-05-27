@@ -128,7 +128,7 @@ $E=\{(1,3), (2,3), (3,4), (4,5), (4,6)\},~P=\{\},~V=\{\}$ \\
 
 \newpage
 
-\section{Format wejścia i wyjścia}
+\section{Algorytm}
 
 Algorytm przyjmuje dwa argumenty: zbiór etykiet liści $R$ oraz macierz odległości $D$. Macierz ta musi spełniać trzy warunki:
 
@@ -142,14 +142,12 @@ Macierz odległości $D$ w implementacji musi być reprezentowana jako dwuwymiar
 
 Algorytm zwraca sekwencję $P$, reprezentującą kod Prüfera, który jednoznacznie reprezentuje graf (poprzedni rozdział).
 
-\newpage
-
-\section{Pseudokod algorytmu}
-
 \begin{algorithm}
 		\floatname{algorithm}{Algorytm}
 		\caption{Główny algorytm}
 		\label{algo}
+		$P = \{ \}$ \\
+		$lastNode = |R|$ \\
 		\textbf{repeat} \\
 		\tab  $S = \{ \}$ \\
 		\tab \textbf{while} (R jest niepusty) \\
@@ -159,23 +157,26 @@ Algorytm zwraca sekwencję $P$, reprezentującą kod Prüfera, który jednoznacz
 		\tab \tab \tab dodaj $m$ do $P$ \\
 		\tab \tab \tab Usuń $k$ z $R$ \\
 		\tab \tab \tab Usuń $k$ z $D$ \\
-		\tab \tab \tab \textbf{if} w $D$ nie ma już wierzchołków
-		\tab \tab \tab przerwij główną pętlę
+		\tab \tab \tab \textbf{if} w $D$ są $2$ wierzchołki i odległość między nimi wynosi $1$ \\
+		\tab \tab \tab \tab przerwij główną pętlę \\
 		\tab \tab \textbf{else} \\
 		\tab \tab \tab $lastNode = lastNode + 1$ \\
 		\tab \tab \tab $m = lastNode$ \\
 		\tab \tab \tab dodaj $m$ do $P$ \\
 		\tab \tab \tab Usuń $k$ z $R$ \\
+		\tab \tab \tab Dodaj kolumnę i wiersz o etykiecie $m$ do $D$ \\
+		\tab \tab \tab $d_{im} = d_{mi} = d_{ik} - 1$, dla $i$ będących etykietami wierszy w $D$ poza $m$ \\
 		\tab \tab \tab Usuń $k$ z $D$ \\
-		\tab \tab \tab $d_{im} = d_{mi} = d_{ik} - 1$, dla $i = 1, 2, \cdots m-1$ \\
 		\tab \tab \tab dodaj $m$ do $S$ \\
 		\tab  $R'$ = getleaves(S, D) \\
-		\tab \textbf{if} $|R'| == 2$ i $d_{ij} == 1$ \\
+		\tab \textbf{if} w $R'$ są $2$ wierzchołki i odległość między nimi wynosi $1$ \\
 		\tab \tab return $P$ \\
 		\tab \textbf{else} \\
 		\tab \tab $R = R'$ \\
 		\textbf{return} $P$ \\
 \end{algorithm}
+
+\newpage
 
 W pseudokodzie użyta została funkcja getleaves, której zadaniem jest wybranie zbioru liści ze zbioru wierzchołków - ozn. $S$ w pseudokodzie.
 
@@ -186,13 +187,15 @@ Funkcja przyjmuje zbiór wierzchołków $S$ o etykietach od $1$ do $|S|$ i macie
 		\caption{Funkcja getleaves}
 		\label{algo}
 		oznacz wszystkie wierzchołki $S$ jako liście \\
-		\textbf{for} i \textbf{in} $1, \cdots |S|$ \\
-		\tab \textbf{for} j \textbf{in} $1, \cdots |S|$ \\
-		\tab \tab \textbf{for} i \textbf{in} $1, \cdots |S|$ \\
-		\tab \tab \tab \textbf{if} $d_{ij} = d_{ik} + d+k$ \\
+		\textbf{for} i \textbf{in} $S$ \\
+		\tab \textbf{for} j \textbf{in} $S$ \\
+		\tab \tab \textbf{for} k \textbf{in} $S$ \\
+		\tab \tab \tab \textbf{if} $d_{ij} = d_{ik} + d_{kj}$ \\
 		\tab \tab \tab \tab oznacz wierzchołek z etykietą $k$ jako nie-liść \\
 		\textbf{return} zbiór wierzchołków $S$ oznaczonych jako liście \\
 \end{algorithm}
+
+\newpage
 
 \section{Dowód poprawności}
 
