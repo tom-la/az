@@ -1,3 +1,5 @@
+import csv
+
 def is_leaf(m, D):
     return D[-1][-1] == 0
 
@@ -49,4 +51,11 @@ def add_new_label(D, R, k):
             continue
         D[i][old_size] = new_value
         D[old_size][i] = new_value
+    return D
+
+def matrix_from_csv(file_path):
+    D = []
+    with open(file_path, "r") as f: 
+        for row in csv.reader(f):
+            D.append([int(d) for d in row])
     return D

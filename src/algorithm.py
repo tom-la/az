@@ -3,9 +3,8 @@ from utils import is_leaf, is_minimal, is_simple_d, get_neighbour, add_vertex, r
 def get_prufer(R, D):
     check_arguments(R, D)
     P = []
-    graph_size = len(R)
     labels = R[:]
-    lastNode = graph_size
+    lastNode = max(R)
     while True:
         # S = []
         while R:

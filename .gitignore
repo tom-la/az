@@ -293,3 +293,8 @@ __pycache__/
 *.gz
 *.pdf
 *.toc
+
+src/build/*
+src/dist/*
+src/*.png
+src/*.spec
