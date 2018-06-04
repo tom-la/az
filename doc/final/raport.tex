@@ -1,0 +1,88 @@
+\documentclass[a4paper,12p]{article}
+\usepackage{standalone}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{physics}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{tikz}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\linespread{1.5}
+
+\renewcommand{\refname}{Źródła}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\begin{document}
+
+\begin{titlepage}
+	\begin{center}
+	
+	{\huge\bfseries Algorytmy zaawansowane - raport z projektu} \\
+	\vspace{1cm}
+	{\Large\scshape Wiktor Gontarczyk\par}
+	{\Large\scshape Tomasz Laskowski\par}
+	\vspace{2cm}
+
+	\today
+	\vspace{1cm}	
+	
+	\end{center}
+\end{titlepage}
+
+\section{Przypomnienie - cel projektu}
+
+Celem projektu było znalezienie i zaimplementowanie algorytmu rozwiązującego problem znajdowania drzewa dla podanej macierzy odległości pomiędzy jego liśćmi. Zdecydowano się na algorytm opierający się na znajdowaniu kodu Prüfera.
+
+\section{Instrukcja obsługi}
+
+Program został zaimplementowany w języku Python, dostępny jest zarówno oryginalny skrypt, jak i wykonywalny plik .exe, utworzony przy użyciu biblioteki \texttt{pyinstaller}. Program jest aplikacją konsolową i oferuje dwie możliwości podania parametrów: przez plik csv oraz bezpośrednio z konsoli. Jedynym potrzebnym argumentem jest macierz odległości ozn. w algorytmie jako macierz $D$.
+
+Macierz jest poddawana walidacji: powinna być symetryczna z zerami na głównej diagonali. W przypadku podania niepoprawnych danych program wypisuje błąd. W przypadku powodzenia wypisane zostaną: sekwencja Prüfera oraz słownik z listowym zapisem otrzymanego drzewa (kluczami są numery wierzchołków, a wartościami listy sąsiadów).
+
+Aby podać dane przez plik, należy zapisać macierz w klasycznym dla pliku csv formacie: wiersze oddzielając znakiem nowej linii, natomiast kolejne elementy wiersza przecinkami (przykład w wysłanym rozwiązaniu). Wywołujemy program z flagą \texttt{--file} (\texttt{-f}), jako argument podając ścieżkę do pliku.
+
+Przykład:
+
+\texttt{./az-tree.exe --file ./tree.csv}
+
+Aby podać dane bezpośrednio w konsoli należy zapisać macierz w formie dwuwymiarowej listy, zgodnie z syntaktyką języka Python. Argument powinien zostać ujęty w cudzysłów. Do tego wywołania służy flaga \texttt{--distances} (\texttt{-d}).
+
+Przykład:
+
+\texttt{./az-tree.exe --distances "[[0, 2, 3], [2, 0, 3], [3, 3, 0]]}
+
+Program posiada również dodatkową opcję rysowania znalezionego drzewa, bardzo pomocną przy implementacji i testach. Służy do tego flaga \texttt{--output-file}, a jako argument podajemy nazwę wynikowego pliku (w formacie PNG). \textbf{Uwaga:} ta metoda wymaga zainstalowania pakietu Graphviz.
+
+Przykład:
+
+\texttt{./az-tree.exe --file ./tree.csv --ouput-file ./tree.png}
+
+Skrót powyższej instrukcji w formacie Markdown jest również dostępny wśród wysłanych plików.
+
+\section{Zmiany w stosunku do planu}
+
+W stosunku do planu ze wstępnej dokumentacji oraz późniejszych, zgłoszonych poprawek zaszło kilka zmian w samym algorytmie:
+
+\begin{enumerate}
+	\item Początkowo zamierzono zrezygnować ze zbioru ozn. $S$, jednak okazało się, że dla metody z wyszukiwaniem jednego liścia na raz, algorytm nie działa poprawnie w niektórych przypadkach - nie udało się przez to zmniejszyć złożoności.
+	\item Poprawiono niepoprawny warunek zakończenia głównej pętli (drobny błąd w zapisie algorytmu).
+	\item Poprawiono funkcję odpowiadającą za wyszukiwanie liści.
+\end{enumerate}
+
+\section{Testy}
+
+% TODO
+
+\section{Podział pracy}
+
+Wiktor Gontarczyk - implementacja, testy, pomiary czasowe, dowód poprawności
+
+Tomasz Laskowski - implementacja, testy, przygotowanie pliku wykonywalnego, instrukcja obsługi, opis algorytmu, złożoność.
+
+\end{document}
