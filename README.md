@@ -17,6 +17,12 @@ Przykładowy, odpowiednio sformatowany plik csv znajduje się w folderze *src*.
 
 Zapis argumentu musi być poprawnym zapisem dwuwymiarowej listy w języku Python.
 
+### Testowanie na losowym drzewie z n wierzchołkami i l liśćmi
+
+Program umożliwia także wykonanie algorytmu na losowym drzewie o n wierzchołkach i l liściach, przekazanych jako argument w formie n:l. Jeśli wybrano opcję generowania pliku PNG z rysunkiem wyjściowego grafu, to generowany jest również rysunek wylosowanego grafu, jako plik o nazwie "original-<nazwa_pliku_wyjściowego>".
+
+`./az-tree.exe --random-tree 20:8 -o "test.png"`
+
 ### Rysowanie drzewa
 
 Program pozwala na wygenerowanie pliku PNG z rysunkiem wyjściowego grafu, za pomocą opcjonalnej flagi `--output-file`:

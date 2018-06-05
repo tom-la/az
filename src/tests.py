@@ -1,45 +1,96 @@
 import unittest
+from prufer_encoder import prufer_decode, decode_sequence_to_distance_matrix
+import numpy as np
+import copy
+import numpy.testing as npt
+import random
 from algorithm import get_prufer
+from prufer import prufer_decode
+from random_tree import random_distance_matrix, tree_to_sequence
+
+
+def get_matrices(R, D):
+    DCopy = copy.deepcopy(D)
+    P = get_prufer(R, D)
+    DComputed = decode_sequence_to_distance_matrix(P)
+    return [DCopy, DComputed]
+
 
 class TestGetPrufer(unittest.TestCase):
-    # def test_happy_path(self):
-    #     R = [0, 1]
-    #     D = [[0, 2], [2, 0]]
-    #     self.assertEqual(get_prufer(R, D), [2])
+    def test_happy_path(self):
+        D = [[0, 2], [2, 0]]
+        R = list(range(len(D)))
+        self.assertEqual(get_prufer(R, D), [2, 2])
 
     def test_throw_error_on_non_symetrical(self):
-        R = [0, 1, 2]
         D = [[0, 1, 3], [2, 0, 3], [3, 3, 0]]
+        R = list(range(len(D)))
         try:
             self.assertRaises(ValueError, get_prufer(R, D))
         except:
             print("Catched expected exception.")
 
     def test_throw_error_on_non_zero_diagonal(self):
-        R = [0, 1, 2]
         D = [[0, 2, 3], [2, 0, 3], [3, 3, 0]]
+        R = list(range(len(D)))
         try:
             self.assertRaises(ValueError, get_prufer(R, D))
         except:
             print("Catched expected exception.")
 
     def test_throw_error_on_invalid_labels(self):
-        R = [1, 2]
         D = [[0, 1, 3], [2, 0, 3], [3, 3, 0]]
+        R = list(range(len(D)))
         try:
             self.assertRaises(ValueError, get_prufer(R, D))
         except:
             print("Catched expected exception.")
 
     def test_simple_1(self):
-        R = [0, 1, 2]
         D = [[0, 2, 3], [2, 0, 3], [3, 3, 0]]
-        self.assertEqual(get_prufer(R, D), [3, 3, 4])
-    
+        R = list(range(len(D)))
+        Doriginal, DComputed = get_matrices(R, D)
+        npt.assert_array_equal(Doriginal, DComputed)
+
     def test_simple_2(self):
-        R = [0, 1, 2, 3]
+        D = [[0, 2, 3], [2, 0, 3], [3, 3, 0]]
+        R = list(range(len(D)))
+        Doriginal, DComputed = get_matrices(R, D)
+        npt.assert_array_equal(Doriginal, DComputed)
+
+    def test_simple_3(self):
         D = [[0, 2, 3, 3], [2, 0, 3, 3], [3, 3, 0, 2], [3, 3, 2, 0]]
-        self.assertEqual(get_prufer(R, D), [4, 4, 5, 5])
+        R = list(range(len(D)))
+        Doriginal, DComputed = get_matrices(R, D)
+        npt.assert_array_equal(Doriginal, DComputed)
+
+    def test_medium_1(self):
+        D = [
+            [0, 2, 2, 4, 5, 6, 6, 4],
+            [2, 0, 2, 4, 5, 6, 6, 4],
+            [2, 2, 0, 4, 5, 6, 6, 4],
+            [4, 4, 4, 0, 3, 4, 4, 2],
+            [5, 5, 5, 3, 0, 3, 3, 3],
+            [6, 6, 6, 4, 3, 0, 2, 4],
+            [6, 6, 6, 4, 3, 2, 0, 4],
+            [4, 4, 4, 2, 3, 4, 4, 0]
+        ]
+        R = list(range(len(D)))
+        Doriginal, DComputed = get_matrices(R, D)
+        npt.assert_array_equal(Doriginal, DComputed)
+
+    
+
+    def test_random(self):
+        number_of_nodes = range(4, 80, 20)
+        number_of_leaves = [random.randint(2, n-2) for n in number_of_nodes]
+        param_list = zip(number_of_nodes, number_of_leaves)
+        for n, l in param_list:
+            with self.subTest(msg="Random distance matrix of tree with {0} nodes, and {1} leaves".format(n, l)):
+                D, tree, seq = random_distance_matrix(n, l)
+                R = list(range(len(D)))
+                Doriginal, DComputed = get_matrices(R, D)
+                npt.assert_array_equal(Doriginal, DComputed)
 
 if __name__ == '__main__':
     unittest.main()
