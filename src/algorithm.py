@@ -1,4 +1,4 @@
-from utils import is_leaf, is_minimal, is_simple_d, get_neighbour, add_vertex, remove_vertex, add_new_label, get_leaves, is_simple
+from utils import is_leaf, is_minimal, is_simple_d, get_neighbour, add_vertex, remove_vertex, add_new_label, get_leaves, is_simple, only_one_leaf
 
 def get_prufer(R, D):
     check_arguments(R, D)
@@ -14,51 +14,26 @@ def get_prufer(R, D):
             m = get_neighbour(k, P, P_neighbs, D, labels)
             if m != -1:
                 P.append(m)
-                P_neighbs.append(k)
                 D = remove_vertex(D, labels, k)
                 labels.remove(k)
                 R.remove(k)
-                # print(P)
-                # print(P_neighbs)
-                # print(labels)
-                # print(R)             
-                # print(D)
-                if is_simple_d(D):
-                    return P
             else:
                 lastNode = lastNode + 1
                 m = lastNode
                 P.append(m)
-                P_neighbs.append(k)
                 D = add_new_label(D, R, k)
                 D = remove_vertex(D, labels, k)
                 labels.remove(k)
                 R.remove(k)
                 labels.append(m)
                 S.append(m)
-                # print(R)
-                # if is_leaf(m, D):
-                #     R.append(m)
-                # print(P)
-                # print(P_neighbs)
-                # print(labels)
-                # print(R)
-                # print(D)
-                # if is_minimal(R, D):
-                # if is_simple_d(D):
-                    # return P
-                # S.append(m)
-        # R_temp = get_leaves(S, D)
-        # if is_minimal(R_temp, D):
-        #     break
-        # else:
-        #     R = R_temp[:]
+            if len(R) == 1 and only_one_leaf(D, labels, m, R):
+                    return P
         leaves = get_leaves(S, D, labels)
         if is_simple(S, D, labels):
             break
         else:
             R = leaves[:]
-    
     return P
 
 def check_arguments(R, D):

@@ -15,6 +15,17 @@ def is_minimal(R, D):
     
     return True
 
+def only_one_leaf(D, labels, m, R):
+    i = labels.index(m)
+    has_single_one = False
+    for j in range(len(D)):
+        if D[i][j] == 1 and labels[j] in R:
+            if has_single_one:
+                return False
+            else:
+                has_single_one = True
+    return has_single_one
+
 # TODO: cleanup
 def is_simple_d(D):
     return (len(D) == 2 and D[0][1] == 1) or len(D) < 2
@@ -49,9 +60,10 @@ def get_leaves(S, D, labels):
 def is_simple(leaves, D, labels):
     if len(leaves) == 0:
         return True
-        
+
     if len(leaves) != 2:
         return False
+
     l1 = labels.index(leaves[0])
     l2 = labels.index(leaves[1])
     return D[l1][l2] == 1
@@ -63,10 +75,10 @@ def get_neighbour(v, P, P_neighbs, D, labels):
             ind = labels.index(p)
             if D[ind][v_ind] == 1:
                 return p
-    for i in range(len(P)):
-        if P[i] == v:
-            if P_neighbs[i] in P:
-                return P_neighbs[i]
+    # for i in range(len(P)):
+    #     if P[i] == v:
+    #         if P_neighbs[i] in P:
+    #             return P_neighbs[i]
                 
     return -1
 
