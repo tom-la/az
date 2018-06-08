@@ -17,20 +17,22 @@ def get_prufer(R, D):
                 D = remove_vertex(D, labels, k)
                 labels.remove(k)
                 R.remove(k)
+                if len(D) == 2 and D[0][1] == 1:                
+                    return P
             else:
                 lastNode = lastNode + 1
                 m = lastNode
                 P.append(m)
-                D = add_new_label(D, R, k)
+                D = add_new_label(D, labels, k)
                 D = remove_vertex(D, labels, k)
                 labels.remove(k)
                 R.remove(k)
                 labels.append(m)
                 S.append(m)
-            if len(R) == 1 and only_one_leaf(D, labels, m, R):
-                    return P
+        if len(labels) > 1:
+            S = list(set(S).union(set(labels)))
         leaves = get_leaves(S, D, labels)
-        if is_simple(S, D, labels):
+        if is_simple(leaves, D, labels):
             break
         else:
             R = leaves[:]

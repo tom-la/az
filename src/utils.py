@@ -2,7 +2,7 @@ import csv
 
 def is_leaf(m, D):
     len_D = len(D)
-    print(D)
+    # print(D)
     for i in range(len_D-1):
         for j in range(len_D-1):
             if (not (i == j == -1)) and D[i][j] == D[i][-1] + D[-1][j]:
@@ -19,7 +19,7 @@ def only_one_leaf(D, labels, m, R):
     i = labels.index(m)
     has_single_one = False
     for j in range(len(D)):
-        if D[i][j] == 1 and labels[j] in R:
+        if D[i][j] == 1:
             if has_single_one:
                 return False
             else:
@@ -47,18 +47,24 @@ def is_simple_d(D):
 def get_leaves(S, D, labels):
     len_D = len(D)
     leaves = S[:]
+    # print(S)
+    # print(D)
     for i in range(len_D):
         for j in range(len_D):
             for k in range(len_D):
                 if (i == j) or (i == k) or (j == k):
                     continue 
                 if (i != j != k) and D[i][j] == D[i][k] + D[k][j]:
+                    # print("Match: {} {} {}".format(i, j, k))
                     if labels[k] in leaves:
+                        # print("Removing {}".format(labels[k]))
                         leaves.remove(labels[k])
     return leaves
 
 def is_simple(leaves, D, labels):
-    if len(leaves) == 0:
+    # if len(leaves) == 0:
+    #     return True
+    if len(leaves) == 1 and len(D) == 1 and D[0][0] == 0:
         return True
 
     if len(leaves) != 2:
@@ -100,8 +106,8 @@ def remove_vertex(D, labels, k):
         del D[i][v]
     return D
 
-def add_new_label(D, R, k):
-    k_ind = R.index(k)
+def add_new_label(D, labels, k):
+    k_ind = labels.index(k)
     old_size = len(D)
     for i in range(old_size):
         D[i].append(0)
