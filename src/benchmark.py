@@ -3,7 +3,6 @@ import argparse
 import time
 import random
 from algorithm import get_prufer
-from prufer_encoder import prufer_decode, decode_sequence_to_distance_matrix
 from random_tree import random_distance_matrix, tree_to_sequence
 import numpy as np
 import pandas as pd
@@ -20,13 +19,13 @@ def main():
     n_start = 10
     step = 10
     ntests = 5
-    ncases = len(list(range(n_start, n_max, step)))
 
-    results = []
-
+    results_df = pd.DataFrame({'n':  pd.Series(dtype=np.int32), 'l':  pd.Series(dtype=np.int32), 'running_time':  pd.Series(dtype=np.float)},
+        columns=['n', 'l', 'running_time'])
+    i = 0
     for n in range(n_start, n_max, step):
-        subresults = []
         for l in range_of_length(2, n-2, ntests):
+            i += 1
             if n <= 3:
                 l = n - 1
 
@@ -38,15 +37,16 @@ def main():
             execution_time = time.time() - start_time
 
             print("--- %s, %s, %s seconds ---" % (n, l, execution_time))
-            subresults.append(execution_time)
-        results.append(np.mean(subresults))
+            results_df.loc[i,:] = (n, l, execution_time)
 
-    print(results)
-    plt.plot(list(range(ncases)), results, 'ro')
+    mean_running_time_per_node_num = results_df.groupby('n').mean().loc[:,'running_time']
+    mean_running_time_per_node_num.plot()
     fig = plt.gcf()
-    plt.show(block=True)
+    plt.title('Running time of the algorithm with different number of nodes')
+    plt.xlabel('Number of nodes in a tree')
+    plt.ylabel('Mean running time of the algorithm [s]')
     fig.savefig('benchmark.png')
-
+    results_df.to_csv('benchmark.csv', index=False)
 
 if __name__ == '__main__':
     main()

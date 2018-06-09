@@ -1,19 +1,9 @@
 import unittest
-from prufer_encoder import decode_sequence_to_distance_matrix
 import numpy as np
-import copy
-import numpy.testing as npt
 import random
 from algorithm import get_prufer
 from prufer import prufer_decode
 from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic, faster_could_be_isomorphic
-
-
-def get_matrices(R, D):
-    DCopy = copy.deepcopy(D)
-    P, Pn = get_prufer(R, D)
-    DComputed = decode_sequence_to_distance_matrix(P)
-    return [DCopy, DComputed]
 
 def get_edges(R, D):
     P, Pn = get_prufer(R, D)
@@ -50,22 +40,22 @@ class TestGetPrufer(unittest.TestCase):
             print("Catched expected exception.")
 
     def test_simple_1(self):
-        D = [[0, 2, 3], [2, 0, 3], [3, 3, 0]]
+        D = [[0, 2, 2], [2, 0, 2], [2, 2, 0]]
         R = list(range(len(D)))
-        Doriginal, DComputed = get_matrices(R, D)
-        npt.assert_array_equal(Doriginal, DComputed)
+        P, Pn = get_prufer(R, D)
+        self.assertEqual(P, [3, 3])
 
     def test_simple_2(self):
         D = [[0, 2, 3], [2, 0, 3], [3, 3, 0]]
         R = list(range(len(D)))
-        Doriginal, DComputed = get_matrices(R, D)
-        npt.assert_array_equal(Doriginal, DComputed)
+        P, Pn = get_prufer(R, D)
+        self.assertEqual(P, [3, 3, 4])
 
     def test_simple_3(self):
         D = [[0, 2, 3, 3], [2, 0, 3, 3], [3, 3, 0, 2], [3, 3, 2, 0]]
         R = list(range(len(D)))
-        Doriginal, DComputed = get_matrices(R, D)
-        npt.assert_array_equal(Doriginal, DComputed)
+        P, Pn = get_prufer(R, D)
+        self.assertEqual(P, [4, 4, 5, 5])
 
     def test_medium_1(self):
         D = [
@@ -79,8 +69,8 @@ class TestGetPrufer(unittest.TestCase):
             [4, 4, 4, 2, 3, 4, 4, 0]
         ]
         R = list(range(len(D)))
-        Doriginal, DComputed = get_matrices(R, D)
-        npt.assert_array_equal(Doriginal, DComputed)
+        P, Pn = get_prufer(R, D)
+        self.assertEqual(P, [8, 8, 8, 9, 10, 11, 11, 9, 12, 10, 9])
 
     def test_random(self):
         number_of_nodes = range(4, 80, 4)

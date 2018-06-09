@@ -13,6 +13,7 @@
 \usepackage{indentfirst}
 \usepackage{amsthm}
 \usepackage{hyperref}
+\usepackage{float}
 \linespread{1.5}
 
 \renewcommand{\refname}{Źródła}
@@ -63,6 +64,18 @@ Przykład:
 
 \texttt{./az-tree.exe --file ./tree.csv --ouput-file ./tree.png}
 
+Inną opcją uruchomienia algorytmu jest podanie parametrów drzewa do wylosowania: liczby wierzchołków n, oraz liczby liści l jako parametr \texttt{--random-tree} w formacie n:l. Wtedy użyta zostanie macierz odległości pomiędzy liśćmi wylosowanego drzewa. 
+W przypadku gdy wybrano opcję rysowania drzewa, zostanie dołączone także drzewo wejściowe jako plik o nazwie \verb$original-<nazwa_pliku_wyjściowego>$. 
+Dodatkową opcją jest sprawdzenie czy drzewo wejściowe jest izomorficzne z drzewem zrekonstruowanym przez algorytm. Służy do tego flaga \texttt{--test-isomorphism}.
+
+Przykład:
+
+\texttt{./az-tree.exe --random-tree 100:20 --ouput-file ./tree.png}
+
+Lub z włączonym testem izomorfizmu:
+
+\texttt{./az-tree.exe --random-tree 100:20 --ouput-file ./tree.png --test-isomorphism}
+
 Skrót powyższej instrukcji w formacie Markdown jest również dostępny wśród wysłanych plików.
 
 \section{Zmiany w stosunku do planu}
@@ -77,7 +90,24 @@ W stosunku do planu ze wstępnej dokumentacji oraz późniejszych, zgłoszonych 
 
 \section{Testy}
 
-% TODO
+\subsection{Testy poprawności implementacji algorytmu}
+
+W pliku tests.py załączono testy algorytmu na ręcznie zweryfikowanych przykładach. Wykorzystano również testy z użyciem losowego wygenerowania macierzy odległości pomiędzy liśćmi dla drzewa wejściowego o liczbie wierzchołków z zakresu od 4 do 80 z krokiem 4 i o losowej liczbie liści. W tym przypadku sprawdzano izomorfizm grafów. Testy poprawności przebiegły pomyślnie.
+
+
+\subsection{Testy wydajnościowe algorytmu}
+
+Przeanalizowano wydajność algorytmu wykorzystując losowe generowanie drzew o zadanej liczbie wierzchołków i liści. Dla danej liczby wierzchołków w zakresie od 10 do 600 z krokiem 10 i zmiennej liczby liści z zakresu od dwóch do $n-2$ interpolowanej liniowo z krokiem 5 (długość sekwencji) zmierzono czasy wykonania algorytmu i uśredniono. Wyniki zapisano w pliku benchmark.csv, wygenerowanym skryptem benchmark.py.
+Uśrednione dla każdego n czasy wykonania algorytmu przedstawiono na poniższym wykresie.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\textwidth]{benchmark.png}
+    \caption{Wykres czasu wykonania algorytmu w sekundach w zależności od liczby wierzchołków drzewa.}
+    \label{fig:mesh1}
+\end{figure}
+
+Wyniki można powtórzyć wywołując skrypt benchmark.py.
 
 \section{Podział pracy}
 

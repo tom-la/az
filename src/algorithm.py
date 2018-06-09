@@ -57,3 +57,11 @@ def check_arguments(R, D):
     for i in range(0, len_r):
         if D[i][i] != 0:
             raise ValueError("Distance matrix D has not got zeros on main diagonal.")
+
+    for i in range(len_r):
+        for j in range(len_r):
+            for k in range(len_r):
+                if D[i][j] == 0 or D[i][k] == 0 or D[k][j] == 0:
+                    continue
+                if D[i][j] > D[i][k] + D[k][j]:
+                    raise ValueError("Distance matrix D violates triangle inequality: {0}, {1}, {2}".format(D[i][j], D[i][k], D[k][j]))
