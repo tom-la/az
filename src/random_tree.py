@@ -4,6 +4,7 @@ import random
 import scipy
 import scipy.sparse.csgraph
 import numpy as np
+import networkx as nx
 
 def tree_to_sequence(tree):
     seq = []
@@ -40,3 +41,18 @@ def random_distance_matrix(n, l):
     seq = random_tree(n, l)
     D = get_full_distance_matrix(seq)
     return D, prufer_decode(seq), seq
+
+def list_of_edges_to_nx_tree(tree1_edges, tree2_edges):
+    tree1 = nx.Graph()
+    tree1.add_edges_from(tree1_edges)
+    tree2 = nx.Graph()
+    tree2.add_edges_from(tree2_edges)
+    return tree1, tree2
+
+def is_isomorphic(tree1_edges, tree2_edges):
+    tree1, tree2 = list_of_edges_to_nx_tree(tree1_edges, tree2_edges)
+    return nx.is_isomorphic(tree1, tree2)
+
+def faster_could_be_isomorphic(tree1_edges, tree2_edges):
+    tree1, tree2 = list_of_edges_to_nx_tree(tree1_edges, tree2_edges)
+    return nx.faster_could_be_isomorphic(tree1, tree2)

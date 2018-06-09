@@ -4,15 +4,15 @@ from prufer_encoder import prufer_decode, decode_sequence_to_distance_matrix
 from algorithm import get_prufer
 from utils import matrix_from_csv
 from visualize import write_graph
-from random_tree import random_distance_matrix, tree_to_sequence
+from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic
 import numpy as np
 
-def node_list_to_dict(nodes):
+def edge_list_to_dict(edges):
     tree = {}
-    for i, j in nodes:
+    for i, j in edges:
         tree[i] = []
         tree[j] = []
-    for i, j in nodes:
+    for i, j in edges:
         tree[i].append(j)
         tree[j].append(i)
     return tree
@@ -34,10 +34,11 @@ def main():
             D = list(eval(args.distances))
         if args.random_tree:
             n, l = [int(i) for i in args.random_tree.split(":")]
-            D, tree_random, seq = random_distance_matrix(n, l)
+            D, tree_random_edges, seq = random_distance_matrix(n, l)
             print("Original Prüfer sequence: {0}".format(seq))
-            tree_random = node_list_to_dict(tree_random)
-            print(tree_random)
+            tree_random = edge_list_to_dict(tree_random_edges)
+            print("Original Tree:\n{0}".format(tree_random))
+            print("Original Tree edges:\n{0}".format(tree_random_edges))
             if args.random_tree:
                 write_graph(tree_random, "original-" + args.output_file)
     except:
@@ -49,11 +50,13 @@ def main():
     P = get_prufer(R, D)
     
     print("Prüfer sequence:\n{0}".format(P))
-    tree = prufer_decode(P)
-    tree = node_list_to_dict(tree)
-    print("Tree edges:\n{0}".format(tree))
+    tree_edges = prufer_decode(P)
+    tree = edge_list_to_dict(tree_edges)
+    
 
     print("Decoded distance matrix:\n{0}".format(np.array(decode_sequence_to_distance_matrix(P))))
+    isomorphic = is_isomorphic(tree_random_edges, tree_edges)
+    print("Tree isomorphism test succeeded:\n{0}".format(isomorphic))
 
     try:
         if args.output_file:

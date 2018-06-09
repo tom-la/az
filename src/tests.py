@@ -5,8 +5,7 @@ import copy
 import numpy.testing as npt
 import random
 from algorithm import get_prufer
-from prufer import prufer_decode
-from random_tree import random_distance_matrix, tree_to_sequence
+from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic, faster_could_be_isomorphic
 
 
 def get_matrices(R, D):
@@ -15,6 +14,9 @@ def get_matrices(R, D):
     DComputed = decode_sequence_to_distance_matrix(P)
     return [DCopy, DComputed]
 
+def get_edges(R, D):
+    P = get_prufer(R, D)
+    return prufer_decode(P)
 
 class TestGetPrufer(unittest.TestCase):
     def test_happy_path(self):
@@ -79,18 +81,18 @@ class TestGetPrufer(unittest.TestCase):
         Doriginal, DComputed = get_matrices(R, D)
         npt.assert_array_equal(Doriginal, DComputed)
 
-    
-
     def test_random(self):
-        number_of_nodes = range(4, 80, 20)
+        number_of_nodes = range(4, 20, 1)
         number_of_leaves = [random.randint(2, n-2) for n in number_of_nodes]
         param_list = zip(number_of_nodes, number_of_leaves)
         for n, l in param_list:
             with self.subTest(msg="Random distance matrix of tree with {0} nodes, and {1} leaves".format(n, l)):
-                D, tree, seq = random_distance_matrix(n, l)
+                D, tree_edges, seq = random_distance_matrix(n, l)
                 R = list(range(len(D)))
-                Doriginal, DComputed = get_matrices(R, D)
-                npt.assert_array_equal(Doriginal, DComputed)
+                computed_tree_edges = get_edges(R, D)
+                if not faster_could_be_isomorphic(tree_edges, computed_tree_edges):
+                    self.fail("Trees are not isomorphic")
+                self.assertTrue(is_isomorphic(tree_edges, computed_tree_edges))
 
 if __name__ == '__main__':
     unittest.main()
