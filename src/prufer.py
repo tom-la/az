@@ -1,16 +1,20 @@
-def prufer_decode(P):
+def prufer_decode(P, Pn):
     # P_copy = P[]
     n = len(P) + 2
     V = list(range(n))
-    graph = { v: [] for v in range(n) }
+    graph = []
     while P:
-        v = find_v(V, P)
+        v = find_v(Pn, P)
         p = P[0]
-        connect(graph, v, p)
+        # connect(graph, v, p)
+        graph.append((v, p))
         V.remove(v)
+        Pn.remove(v)
         P.remove(p)
-    connect(graph, V[0], V[1])
+    # connect(graph, V[0], V[1])
+    graph.append((V[0], V[1]))
     return graph
+
 
 def find_v(V, P):
     for v in V:

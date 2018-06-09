@@ -1,28 +1,29 @@
 import unittest
-from prufer_encoder import prufer_decode, decode_sequence_to_distance_matrix
+from prufer_encoder import decode_sequence_to_distance_matrix
 import numpy as np
 import copy
 import numpy.testing as npt
 import random
 from algorithm import get_prufer
+from prufer import prufer_decode
 from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic, faster_could_be_isomorphic
 
 
 def get_matrices(R, D):
     DCopy = copy.deepcopy(D)
-    P = get_prufer(R, D)
+    P, Pn = get_prufer(R, D)
     DComputed = decode_sequence_to_distance_matrix(P)
     return [DCopy, DComputed]
 
 def get_edges(R, D):
-    P = get_prufer(R, D)
-    return prufer_decode(P)
+    P, Pn = get_prufer(R, D)
+    return prufer_decode(P, Pn)
 
 class TestGetPrufer(unittest.TestCase):
     def test_happy_path(self):
         D = [[0, 2], [2, 0]]
         R = list(range(len(D)))
-        self.assertEqual(get_prufer(R, D), [2, 2])
+        self.assertEqual(get_prufer(R, D)[0], [2])
 
     def test_throw_error_on_non_symetrical(self):
         D = [[0, 1, 3], [2, 0, 3], [3, 3, 0]]
@@ -82,7 +83,7 @@ class TestGetPrufer(unittest.TestCase):
         npt.assert_array_equal(Doriginal, DComputed)
 
     def test_random(self):
-        number_of_nodes = range(4, 20, 1)
+        number_of_nodes = range(4, 80, 4)
         number_of_leaves = [random.randint(2, n-2) for n in number_of_nodes]
         param_list = zip(number_of_nodes, number_of_leaves)
         for n, l in param_list:

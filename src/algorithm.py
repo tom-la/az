@@ -3,6 +3,7 @@ from utils import is_leaf, is_minimal, is_simple_d, get_neighbour, add_vertex, r
 def get_prufer(R, D):
     check_arguments(R, D)
     P = []
+    Pn = []
     P_neighbs = []
     labels = R[:]
     lastNode = max(R)
@@ -14,29 +15,32 @@ def get_prufer(R, D):
             m = get_neighbour(k, P, P_neighbs, D, labels)
             if m != -1:
                 P.append(m)
+                Pn.append(k)
                 D = remove_vertex(D, labels, k)
                 labels.remove(k)
                 R.remove(k)
-                if len(D) == 2 and D[0][1] == 1:                
-                    return P
             else:
                 lastNode = lastNode + 1
                 m = lastNode
                 P.append(m)
+                Pn.append(k)
                 D = add_new_label(D, labels, k)
                 D = remove_vertex(D, labels, k)
                 labels.remove(k)
                 R.remove(k)
                 labels.append(m)
                 S.append(m)
-        if len(labels) > 1:
+            if len(D) == 2 and D[0][1] == 1:                
+                    return [P, Pn]
+        if len(labels) >= 1:
             S = list(set(S).union(set(labels)))
+        S.sort()
         leaves = get_leaves(S, D, labels)
         if is_simple(leaves, D, labels):
             break
         else:
             R = leaves[:]
-    return P
+    return [P, Pn]
 
 def check_arguments(R, D):
     len_r = len(R)
