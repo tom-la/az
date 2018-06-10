@@ -1,9 +1,8 @@
 import unittest
-import numpy as np
 import random
 from algorithm import get_prufer
 from prufer import prufer_decode
-from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic, faster_could_be_isomorphic
+from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic
 
 def get_edges(R, D):
     P, Pn = get_prufer(R, D)
@@ -81,8 +80,6 @@ class TestGetPrufer(unittest.TestCase):
                 D, tree_edges, seq = random_distance_matrix(n, l)
                 R = list(range(len(D)))
                 computed_tree_edges = get_edges(R, D)
-                if not faster_could_be_isomorphic(tree_edges, computed_tree_edges):
-                    self.fail("Trees are not isomorphic")
                 self.assertTrue(is_isomorphic(tree_edges, computed_tree_edges))
 
 if __name__ == '__main__':

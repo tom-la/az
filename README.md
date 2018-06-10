@@ -40,4 +40,4 @@ Program pozwala na wygenerowanie pliku PNG z rysunkiem wyjściowego grafu, za po
 Aby stworzyć nowy plik .exe należy użyć biblioteki [pyinstaller](http://www.pyinstaller.org/ "PyInstaller").
 
 W folderze *src* należy wykonać:
-`pyinstaller --onefile ./az-tree.py`
+`pyinstaller --hidden-import pydot --hidden-import logging --onefile ./az-tree.py`

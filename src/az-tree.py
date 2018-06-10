@@ -5,8 +5,7 @@ from prufer import prufer_decode
 from algorithm import get_prufer
 from utils import matrix_from_csv
 from visualize import write_graph
-from random_tree import random_distance_matrix, tree_to_sequence, is_isomorphic, faster_could_be_isomorphic
-import numpy as np
+from random_tree import random_distance_matrix, is_isomorphic
 
 def edge_list_to_dict(edges):
     tree = {}
@@ -53,7 +52,7 @@ def main():
     except:
         print("Invalid argument format. Error during parsing distance matrix: {0}".format(sys.exc_info()[0]))
         return
-    print("Original matrix:\n{0}".format(np.array(D)))
+    print("Original matrix:\n{0}".format(D))
     R = list(range(len(D)))
     print(R)
     P, Pn = get_prufer(R, D)
@@ -63,13 +62,10 @@ def main():
     tree_edges = prufer_decode(P, Pn)
     tree = edge_list_to_dict(tree_edges)
     
-    print("Decoded distance matrix:\n{0}".format(np.array(decode_sequence_to_distance_matrix(PCopy))))
-    if args.random_tree and args.test_isomorphism:       
-        if not faster_could_be_isomorphic(tree_random_edges, tree_edges):
-            print("Tree isomorphism test result: {0}".format(False))
-        else:
-            isomorphic = is_isomorphic(tree_random_edges, tree_edges)
-            print("Tree isomorphism test result: {0}".format(isomorphic))
+    print("Decoded distance matrix:\n{0}".format(decode_sequence_to_distance_matrix(PCopy)))
+    if args.random_tree and args.test_isomorphism:
+        isomorphic = is_isomorphic(tree_random_edges, tree_edges)
+        print("Tree isomorphism test result: {0}".format(isomorphic))
 
     try:
         if args.output_file:
